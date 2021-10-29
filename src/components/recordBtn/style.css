@@ -1,0 +1,16 @@
+.record_btn .btn {
+    padding: 14px 30px;
+    background: darkblue;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .record_btn .disabled_btn {
+      background: rgba(0, 0, 0, 0.25);
+      cursor: default;
+      box-shadow: 0 0;
+  }
