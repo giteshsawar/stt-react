@@ -36,7 +36,8 @@ function RecordBtn() {
           stream = await navigator.mediaDevices.getUserMedia(constraints); 
           // ss(socket).emit("audio_stream", stream);
 
-          console.log("stremaing", stream);
+          const audioStream = ss.createStream();
+          ss(socket).emit('stream-transcribe', audioStream);
           recorder = new RecordRTC(stream, {
             type: 'audio',
             mimeType: 'audio/webm',
@@ -45,19 +46,9 @@ function RecordBtn() {
             recorderType: MediaStreamRecorder,
             numberOfAudioChannels: 1,
             timeSlice: 4000,
-            ondataavailable: function(blob) {
-                // making use of socket.io-stream for bi-directional
-                // streaming, create a stream
-                const audioStream = ss.createStream();
-                // stream directly to server
-                // it will be temp. stored locally
-                console.log("send stream", blob);
-                ss(socket).emit('stream-transcribe', audioStream, {
-                    name: 'stream.wav', 
-                    size: blob.size
-                });
-                // pipe the audio blob to the read stream
-                ss.createBlobReadStream(blob).pipe(audioStream);
+            ondataavailable: async function(blob) {
+              const buffer = await blob.arrayBuffer();
+              audioStream.write(Buffer.from(buffer), console.log);
             }
           });
 
