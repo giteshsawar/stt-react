@@ -5,6 +5,7 @@ import { useSpeechToText } from '../../hooks';
 import './style.css';
 
 function RecordBtn() {
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { sendSpeech, onTextAvailable } = useSpeechToText({ isRoot: true });
   const [texts, setTexts] = useState('');
