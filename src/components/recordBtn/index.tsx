@@ -26,13 +26,13 @@ function RecordBtn() {
         desiredSampRate: 16000,
         recorderType: StereoAudioRecorder,
         numberOfAudioChannels: 1,
-        // timeSlice: 4000,
-        // ondataavailable: async function(blob) {
-        //   const base64 = await blobToBase64(blob) as string;
-        //   sendSpeech(base64);
-        //   // const snd = new Audio(base64);
-        //   // snd.play();
-        // }
+        timeSlice: 4000,
+        ondataavailable: async function(blob) {
+          const base64 = await blobToBase64(blob) as string;
+          sendSpeech(base64);
+          // const snd = new Audio(base64);
+          // snd.play();
+        }
       });
 
       recorder.startRecording();
