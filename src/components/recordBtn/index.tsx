@@ -8,26 +8,10 @@ const ss = require('socket.io-stream');
 
 function RecordBtn() {
     const [mediaDeviceError, setMediaDeviceError] = useState<boolean>(false);
-    const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
     const [outputString, setOutputString] = useState<string>("");
     const [textValue, setTextValue] = useState<string>("");
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
-
-    // let whiteNoiseNode: AudioWorkletNode;
-    // const addWorkletModule = async (worklet: AudioWorklet) => {
-    //   await worklet.addModule('noise-processor.js');
-
-    //   whiteNoiseNode = new AudioWorkletNode(audioContext, 'noise-processor');
-    //   // whiteNoiseNode.connect(audioContext.destination);
-    // }
-
-    // const audioContext = new AudioContext();
-
-    // const audioWorklet = audioContext.audioWorklet;
-    // console.log("white noise node", audioWorklet);
-
-    // addWorkletModule(audioWorklet);
 
     let recorder: RecordRTC;
     const getMediaStream = async (constraints: MediaStreamConstraints) => {
@@ -60,11 +44,13 @@ function RecordBtn() {
           /* use the stream */
         } catch(err) {
           console.log("err", err);
+          setMediaDeviceError(true);
           /* handle the error */
         }
     };
 
     const getSpeech = () => {
+      console.log("send data", textValue);
       socket.emit("get-speech", textValue);
     }
 
@@ -80,7 +66,6 @@ function RecordBtn() {
             // audioRef.current.play();
           }
       });
-      // mediaRecorderR.stop();
     };
 
     useEffect(() => {
@@ -94,12 +79,11 @@ function RecordBtn() {
       });
 
       socket.on("got-speech", data => {
+        console.log("got data", data);
         const audio = new Audio("data:audio/wav;base64,"+data);
         audio.play();
       });
     });
-
-    // console.log("data available", mediaRecorder);
 
     return (
         <div className="record_btn">
