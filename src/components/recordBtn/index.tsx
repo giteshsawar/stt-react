@@ -10,6 +10,7 @@ function RecordBtn() {
     const [mediaDeviceError, setMediaDeviceError] = useState<boolean>(false);
     const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
     const [outputString, setOutputString] = useState<string>("");
+    const [textValue, setTextValue] = useState<string>("");
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -63,6 +64,10 @@ function RecordBtn() {
         }
     };
 
+    const getSpeech = () => {
+      socket.emit("get-speech", textValue);
+    }
+
     const stopRecording = () => {
       recorder.stopRecording(function() {
         const blob = recorder.getBlob();
@@ -88,12 +93,17 @@ function RecordBtn() {
         }
       });
 
+      socket.on("got-speech", data => {
+        const audio = new Audio("data:audio/wav;base64,"+data);
+        audio.play();
+      });
     });
 
     // console.log("data available", mediaRecorder);
 
     return (
         <div className="record_btn">
+          <h1>STT</h1>
           <button 
             className={`btn ${mediaDeviceError ? ' disabled_btn' : ''}`} 
             disabled={mediaDeviceError} 
@@ -111,7 +121,19 @@ function RecordBtn() {
             stop recording
           </button>
           <audio ref={audioRef}></audio>
-          <div style={{ padding: '10px', fontSize: '15px' }}>{outputString}</div>
+          <div style={{ padding: '20px 10px', fontSize: '15px' }}>{outputString}</div>
+          
+          <div style={{ padding: '20px 10px' }}>
+            <h1>TTS</h1>
+            <input type="text" placeholder="Enter text to convert" className="txtbox" onChange={e => setTextValue(e.target.value)} />
+            <button 
+              className={`btn btn-speech`} 
+              disabled={mediaDeviceError} 
+              onClick={getSpeech}
+            >
+              Get speech
+            </button>
+          </div>
         </div>
     );
 }

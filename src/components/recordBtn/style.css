@@ -14,3 +14,13 @@
       cursor: default;
       box-shadow: 0 0;
   }
+
+.record_btn .txtbox {
+      height: 24px;
+      padding: 8px;
+      font-size: 14px;
+      width: 500px;
+  }
+.record_btn .btn-speech {
+      background: seagreen;
+  }
