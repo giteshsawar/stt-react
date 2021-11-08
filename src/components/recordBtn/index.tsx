@@ -21,7 +21,7 @@ function RecordBtn() {
           stream = await navigator.mediaDevices.getUserMedia(constraints); 
           
           const audioStream = ss.createStream();
-          ss(socket).emit('stream-transcribe', audioStream);
+          ss(socket).emit('stt', audioStream);
 
 
           recorder = new RecordRTC(stream, {
@@ -51,7 +51,7 @@ function RecordBtn() {
 
     const getSpeech = () => {
       console.log("send data", textValue);
-      socket.emit("get-speech", textValue);
+      socket.emit("tts", textValue);
     }
 
     const stopRecording = () => {
@@ -70,7 +70,7 @@ function RecordBtn() {
 
     useEffect(() => {
 
-      socket.on("results", data => {
+      socket.on("stt", data => {
         console.log("data result", data);
         if(data && data.results[0] && data.results[0].alternatives[0]){
           console.log("transcript data", data.results[0].alternatives[0].transcript);
@@ -78,8 +78,9 @@ function RecordBtn() {
         }
       });
 
-      socket.on("got-speech", data => {
+      socket.on("tts", data => {
         console.log("got data", data);
+        console.log("file sze base 64", 4*(data.length/3)/1024);
         const audio = new Audio("data:audio/wav;base64,"+data);
         audio.play();
       });
