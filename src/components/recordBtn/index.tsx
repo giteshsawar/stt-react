@@ -120,7 +120,7 @@ function RecordBtn() {
         //   }
         // });
       });
-    });
+    }, []);
 
     const appendBuffer = (buffer1: AudioBuffer, buffer2: AudioBuffer, context: AudioContext) => {
       const numberOfChannels = Math.min( buffer1.numberOfChannels, buffer2.numberOfChannels );
